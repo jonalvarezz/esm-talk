@@ -3,7 +3,7 @@ html
   head
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-    title My Talk Title | Jonathan Álvarez González
+    title EcmaScript Modules | Jonathan Álvarez González
 
     link(rel='stylesheet', type='text/css', href='build/build.css')
 
@@ -11,9 +11,189 @@ html
 
     article
 
-      section(data-bespoke-backdrop='fbg-image start')
-        h1 My Talk Title
+      section(data-bespoke-backdrop='bg-red start')
+        h1 EcmaScript Modules (ESM)
         h3 <a href="https://twitter.com/jonalvarezz" target="_blank">@jonalvarezz</a>
+
+      section(data-bespoke-backdrop='bg-carrot')
+        h2 JavaScript do not provide a modules system
+
+      section
+        h1 1. Long scripts
+
+      section
+        pre
+          code.language-html='<script type="application/javascript">'
+          p
+          code.language-javascript.
+            var shopCart = {
+              taxPercent: 19,
+              items: [
+                {id: 23, price: 10000},
+                {id: 24, price: 13000},
+                {id: 28, price: 12000}
+              ]
+            };
+            
+            // Subtotal calculator
+            var getSubTotal = function (items) {
+              return items.reduce(function (acc, i) {
+                return acc += i.price
+                }, 0)
+            };
+            // Taxes calculator
+            var getTaxes = function (subTotal, taxPercent) {
+              return subTotal * (taxPercent / 100)
+            };
+            // Total calculator
+            var getTotal = function (subTotal, taxValue) {
+              return subTotal + taxValue
+            };
+            // Main code
+            var subTotalValue = getSubTotal(shopCart.items);
+            var taxValue = getTaxes(subTotalValue,  shopCart.taxPercent);
+            var total = getTotal(subTotalValue,  taxValue);
+          p
+          code.language-html='</script>'
+
+      section
+        h1 2. Separate files
+
+      section
+        pre
+          code.language-javascript.
+            // subtotal.js
+            var getSubTotal = ...
+
+            // taxes.js
+            var getTaxes = ...
+
+            // total.js
+            var getTotal = ...
+
+            // app.js
+            (function (window) {
+              var shopCart = ...
+
+              var subTotalValue = window.getSubTotal(shopCart.items)
+              var taxValue = window.getTaxes(subTotalValue,  shopCart.taxPercent)
+              var total = window.getTotal(subTotalValue,  taxValue)
+            })(window);
+
+      section
+        pre
+          code.language-html='<!-- HTML -->'
+          p
+          code.language-html='<script type="application/javascript" src="subtotal.js" />'
+          p
+          code.language-html='<script type="application/javascript" src="taxes.js" />'
+          p
+          code.language-html='<script type="application/javascript" src="total.js" />'
+          p
+          code.language-html='<script type="application/javascript" src="app.js" />'
+
+      section(data-bespoke-backdrop='bg-navy-blue')
+        h2 ಠ_ಠ
+        h3 We want only one app.js file
+
+      section(data-bespoke-backdrop='bg-image bg-image--elmo')
+        h3 The raise of bundlers
+
+      section
+        h1 3.1 Asynchronous module definition (AMD)
+        h3 RequireJS
+
+      section
+        pre
+          code.language-javascript.
+            // app.js
+            define(['subtotal', 'taxes', 'total'], function (getSubTotal, getTaxes, getTotal) {
+              // code ...
+            })
+
+      section
+        h1 3.2 CommonJS
+        h3 Browserify
+
+      section
+        pre
+          code.language-javascript.
+            // subtotal.js
+            var getSubTotal = ...
+            module.exports = getSubTotal
+
+            // taxes.js
+            var getTaxes = ...
+            module.exports = getTaxes
+
+            // total.js
+            var getTotal = ...
+            module.exports = getTotal
+
+            // app.js
+            var getSubTotal = require('getSubTotal')
+            var getTaxes = require('getTaxes')
+            var getTotal = require('getTotal')
+
+            var shopCart = ...
+
+            var subTotalValue = window.getSubTotal(shopCart.items)
+            var taxValue = window.getTaxes(subTotalValue,  shopCart.taxPercent)
+            var total = window.getTotal(subTotalValue,  taxValue)
+
+      section
+        h1 3.3 Both systems
+        h3 Webpack, babel, rollup, traceur
+
+      section
+        img(src="../images/es6.png", alt="ES6 compability table", style="max-width: 100%")
+        h3 ES6 compability table
+
+      section
+        pre
+          code.language-javascript.
+            // webpack.config.js (webpack 2)
+            // Enable AMD/CommonJS imports and ES6 Syntax
+            var path = require('path')
+
+            module.exports = {
+              entry: path.resolve('src', 'app.js'),
+              output: {
+                filename: 'bundle.js',
+                publicPath: '/'
+              },
+              module: {
+                rules: [
+                  {
+                   "test": /\.js?$/,
+                   "exclude": /node_modules/,
+                   "loader": "babel-loader"
+                  }
+                ]
+              }
+            }
+
+      section
+        img(src="../images/es6-module.png", alt="ES6-module compability table", style="max-width: 100%")
+        h3 ES6-module compability table
+
+      section
+        pre
+          code.language-html='<!-- index.html -->'
+          p
+          code.language-html='<script type="module" src="src/app.js" />'
+
+      section(data-bespoke-backdrop='bg-image bg-image--elmo')
+        h2 🤔
+        h3 The fall of bundlers?
+
+      section(data-bespoke-backdrop='bg-red')
+        h3 Native and bundled modules differences
+        h3 NodeJS
+        h3 Still a work in progress
+
+      section(data-bespoke-backdrop='bg-yellow')
+        h3.text-color-asphalt “Write code that is easy to delete not easy to extend”
 
       section(data-bespoke-backdrop="fbg-image final")
         h2 Thank you
