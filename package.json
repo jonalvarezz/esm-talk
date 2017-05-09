@@ -1,7 +1,7 @@
 {
-  "name": "my-talk",
-  "version": "0.1.0",
-  "description": "Talk description",
+  "name": "esm-talk",
+  "version": "1.0.0",
+  "description": "EcmaScript Modules keynote by @jonalvarezz",
   "author": "Jonathan Alvarez <j@jonalvarezz.com> (http://j@jonalvarezz.com)",
   "license": "MIT",
   "scripts": {
@@ -9,15 +9,13 @@
     "postinstall": "node ./node_modules/.bin/bower install",
     "deploy": "cross-env NODE_ENV=production gulp deploy"
   },
-  "dependencies": {
-    "bespoke-theme-nebula": "1.0.1"
-  },
   "devDependencies": {
     "bespoke": "1.0.0",
     "bespoke-backdrop": "1.0.0",
     "bespoke-hash": "1.0.0",
     "bespoke-keys": "1.0.0",
     "bespoke-theme-cube": "2.0.0",
+    "bespoke-theme-nebula": "1.0.1",
     "bespoke-touch": "1.0.0",
     "debowerify": "1.5.0",
     "del": "1.1.1",
@@ -36,8 +34,5 @@
     "insert-css": "0.2.0",
     "opn": "0.1.2",
     "through": "2.3.4"
-  },
-  "engines": {
-    "node": ">=0.10.0"
   }
 }
