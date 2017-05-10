@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>EcmaScript Modules | Jonathan Álvarez González</title>
+    <link rel="stylesheet" type="text/css" href="build/build.css">
+  </head>
+  <body>
+    <article>
+      <section data-bespoke-backdrop="bg-red start">
+        <h1>EcmaScript Modules (ESM)</h1>
+        <h3><a href="https://twitter.com/jonalvarezz" target="_blank">@jonalvarezz</a></h3>
+      </section>
+      <section data-bespoke-backdrop="bg-carrot">
+        <h2>JavaScript do not provide a modules system</h2>
+      </section>
+      <section>
+        <h1>1. Long scripts</h1>
+      </section>
+      <section>
+        <pre><code class="language-html">&lt;script type=&quot;application/javascript&quot;&gt;</code>
+          <p></p><code class="language-javascript">var shopCart = {
+  taxPercent: 19,
+  items: [
+    {id: 23, price: 10000},
+    {id: 24, price: 13000},
+    {id: 28, price: 12000}
+  ]
+};
+
+// Subtotal calculator
+var getSubTotal = function (items) {
+  return items.reduce(function (acc, i) {
+    return acc += i.price
+    }, 0)
+};
+// Taxes calculator
+var getTaxes = function (subTotal, taxPercent) {
+  return subTotal * (taxPercent / 100)
+};
+// Total calculator
+var getTotal = function (subTotal, taxValue) {
+  return subTotal + taxValue
+};
+// Main code
+var subTotalValue = getSubTotal(shopCart.items);
+var taxValue = getTaxes(subTotalValue,  shopCart.taxPercent);
+var total = getTotal(subTotalValue,  taxValue);</code>
+          <p></p><code class="language-html">&lt;/script&gt;</code></pre>
+      </section>
+      <section>
+        <h1>2. Separate files</h1>
+      </section>
+      <section>
+        <pre><code class="language-javascript">// subtotal.js
+var getSubTotal = ...
+
+// taxes.js
+var getTaxes = ...
+
+// total.js
+var getTotal = ...
+
+// app.js
+(function (window) {
+  var shopCart = ...
+  
+  var subTotalValue = window.getSubTotal(shopCart.items)
+  var taxValue = window.getTaxes(subTotalValue,  shopCart.taxPercent)
+  var total = window.getTotal(subTotalValue,  taxValue)
+})(window);
+</code></pre>
+      </section>
+      <section>
+        <pre><code class="language-html">&lt;!-- HTML --&gt;</code>
+          <p></p><code class="language-html">&lt;script type=&quot;application/javascript&quot; src=&quot;subtotal.js&quot; /&gt;</code>
+          <p></p><code class="language-html">&lt;script type=&quot;application/javascript&quot; src=&quot;taxes.js&quot; /&gt;</code>
+          <p></p><code class="language-html">&lt;script type=&quot;application/javascript&quot; src=&quot;total.js&quot; /&gt;</code>
+          <p></p><code class="language-html">&lt;script type=&quot;application/javascript&quot; src=&quot;app.js&quot; /&gt;</code></pre>
+      </section>
+      <section data-bespoke-backdrop="bg-navy-blue">
+        <h2>ಠ_ಠ</h2>
+        <h3>We want only one app.js file</h3>
+      </section>
+      <section data-bespoke-backdrop="bg-image bg-image--elmo">
+        <h3>The raise of bundlers</h3>
+      </section>
+      <section>
+        <h1>3.1 Asynchronous module definition (AMD)</h1>
+        <h3>RequireJS</h3>
+      </section>
+      <section>
+        <pre><code class="language-javascript">// app.js
+define(['subtotal', 'taxes', 'total'], function (getSubTotal, getTaxes, getTotal) {
+  // code ...
+})
+</code></pre>
+      </section>
+      <section>
+        <h1>3.2 CommonJS</h1>
+        <h3>Browserify</h3>
+      </section>
+      <section>
+        <pre><code class="language-javascript">// subtotal.js
+var getSubTotal = ...
+module.exports = getSubTotal
+
+// taxes.js
+var getTaxes = ...
+module.exports = getTaxes
+
+// total.js
+var getTotal = ...
+module.exports = getTotal
+
+// app.js
+var getSubTotal = require('getSubTotal')
+var getTaxes = require('getTaxes')
+var getTotal = require('getTotal')
+
+var shopCart = ...
+
+var subTotalValue = window.getSubTotal(shopCart.items)
+var taxValue = window.getTaxes(subTotalValue,  shopCart.taxPercent)
+var total = window.getTotal(subTotalValue,  taxValue)
+</code></pre>
+      </section>
+      <section>
+        <h1>3.3 Both systems</h1>
+        <h3>Webpack, babel, rollup, traceur</h3>
+      </section>
+      <section><img src="../images/es6.png" alt="ES6 compability table" style="max-width: 100%">
+        <h3>ES6 compability table</h3>
+      </section>
+      <section>
+        <pre><code class="language-javascript">// webpack.config.js (webpack 2)
+// Enable AMD/CommonJS imports and ES6 Syntax
+var path = require('path')
+
+module.exports = {
+  entry: path.resolve('src', 'app.js'),
+  output: {
+    filename: 'bundle.js',
+    publicPath: '/'
+  },
+  module: {
+    rules: [
+      {
+       "test": /\.js?$/,
+       "exclude": /node_modules/,
+       "loader": "babel-loader"
+      }
+    ]
+  }
+}
+</code></pre>
+      </section>
+      <section><img src="../images/es6-module.png" alt="ES6-module compability table" style="max-width: 100%">
+        <h3>ES6-module compability table</h3>
+      </section>
+      <section>
+        <pre><code class="language-html">&lt;!-- index.html --&gt;</code>
+          <p></p><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;src/app.js&quot; /&gt;</code></pre>
+      </section>
+      <section data-bespoke-backdrop="bg-image bg-image--elmo">
+        <h2>🤔</h2>
+        <h3>The fall of bundlers?</h3>
+      </section>
+      <section data-bespoke-backdrop="bg-red">
+        <h3>Native and bundled modules differences</h3>
+        <h3>NodeJS</h3>
+        <h3>Still a work in progress</h3>
+      </section>
+      <section data-bespoke-backdrop="bg-yellow">
+        <h3 class="text-color-asphalt">“Write code that is easy to delete not easy to extend”</h3>
+      </section>
+      <section data-bespoke-backdrop="fbg-image final">
+        <h2>Thank you</h2>
+        <h3><a href="https://twitter.com/jonalvarezz" target="_blank">Jonathan Álvarez</a></h3>
+      </section>
+    </article>
+    <script src="build/build.js"></script>
+  </body>
+</html>
